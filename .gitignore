@@ -1,0 +1,30 @@
+# dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+
+# environment
+.env*.local
+.env
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# OS
+.DS_Store
+Thumbs.db
+
+# misc
+_old_app/
+
+# product.db is intentionally NOT ignored.
+# It must be committed so Vercel has the file at runtime.
+# Vercel Lambdas mount the deployment bundle read-only, and the app
+# opens product.db with { readonly: true }, which works fine.
+# To update data: edit scripts/seed-db.ts, run npm run db:seed, commit the db file.

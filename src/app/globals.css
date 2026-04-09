@@ -1,0 +1,396 @@
+@import "tailwindcss";
+
+/* To add a new theme (e.g. "sepia"):
+ *   1. Append a [data-theme="sepia"] { ... } block below with overrides.
+ *   2. Add "sepia" to the cycle in ThemeToggle.tsx.
+ * All components read from CSS custom properties, so no component changes are needed. */
+
+@theme {
+  --color-bg: #F2F2F2;
+  --color-bg-inverted: #111111;
+  --color-fg: #111111;
+  --color-fg-muted: #6E6E6E;
+  --color-accent: #0066FF;
+  --color-accent-fg: #FFFFFF;
+  --color-border: rgba(17, 17, 17, 0.65);
+
+  --font-heading: var(--font-montserrat, "Montserrat"), sans-serif;
+  --font-body: var(--font-inter, "Inter"), sans-serif;
+  --font-mono: var(--font-ibm-plex-mono, "IBM Plex Mono"), monospace;
+
+  --radius: 0rem;
+}
+
+/* Light theme (default) */
+:root,
+[data-theme="light"] {
+  --color-bg: #F2F2F2;
+  --color-bg-inverted: #111111;
+  --color-fg: #111111;
+  --color-fg-muted: #6E6E6E;
+  --color-accent: #0066FF;
+  --color-accent-fg: #FFFFFF;
+  --color-border: rgba(17, 17, 17, 0.65);
+}
+
+/* Dark theme */
+[data-theme="dark"] {
+  --color-bg: #0A0A0A;
+  --color-bg-inverted: #F2F2F2;
+  --color-fg: #F2F2F2;
+  --color-fg-muted: #9A9A9A;
+  --color-accent: #3B82F6;
+  --color-accent-fg: #0A0A0A;
+  --color-border: rgba(242, 242, 242, 0.45);
+}
+
+/* System preference fallback when no data-theme is set */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --color-bg: #0A0A0A;
+    --color-bg-inverted: #F2F2F2;
+    --color-fg: #F2F2F2;
+    --color-fg-muted: #9A9A9A;
+    --color-accent: #3B82F6;
+    --color-accent-fg: #0A0A0A;
+    --color-border: rgba(242, 242, 242, 0.45);
+  }
+}
+
+/* Base */
+html {
+  scroll-behavior: auto;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+}
+
+/* Typography */
+.font-heading {
+  font-family: var(--font-heading);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+.font-mono-label {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Grid System */
+.grid-checkerboard {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  width: 100vw;
+  height: 100vh;
+}
+
+.grid-tile {
+  position: relative;
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s ease;
+}
+
+.grid-tile:hover {
+  border-color: var(--color-fg);
+}
+
+.grid-tile-accent {
+  background-color: var(--color-accent);
+  border: 1px solid var(--color-accent);
+  position: relative;
+}
+
+.grid-tile-accent:hover {
+  border-color: var(--color-accent);
+}
+
+.grid-tile-dark {
+  background-color: var(--color-bg-inverted);
+  border: 1px solid var(--color-bg-inverted);
+  color: var(--color-bg);
+}
+
+/* Tile Content */
+.tile-text {
+  font-family: var(--font-heading);
+  font-weight: 900;
+  font-size: clamp(28px, 3.5vw, 56px);
+  text-transform: uppercase;
+  line-height: 0.9;
+  color: var(--color-fg);
+}
+
+.tile-text-light {
+  color: var(--color-bg);
+}
+
+/* Text tile layout helper */
+.text-tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Image Slices */
+.image-slice {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(100%) contrast(1.15);
+  transition: transform 0.4s ease;
+}
+
+.grid-tile:hover .image-slice {
+  transform: scale(1.03);
+}
+
+/* Grain Overlay */
+.grain-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.04;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* CTA Button */
+.cta-button {
+  background-color: var(--color-accent);
+  color: var(--color-accent-fg);
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 12px 24px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-button:hover {
+  transform: scale(1.03);
+  filter: brightness(0.88);
+}
+
+.cta-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.cta-button:hover::before {
+  left: 100%;
+}
+
+/* Navigation */
+.nav-fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  mix-blend-mode: difference;
+}
+
+.nav-logo {
+  font-family: var(--font-heading);
+  font-weight: 900;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: white;
+}
+
+.nav-links {
+  display: flex;
+  gap: 32px;
+  margin-right: 24px;
+}
+
+.nav-link {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: white;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.nav-link:hover {
+  opacity: 0.7;
+}
+
+/* Section Base */
+.section-pinned {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  will-change: transform;
+}
+
+/* Pin spacer fix for GSAP */
+.pin-spacer {
+  pointer-events: none !important;
+}
+
+.pin-spacer > * {
+  pointer-events: auto !important;
+}
+
+/* Accent tile pulse animation */
+.grid-tile-accent::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: inherit;
+  opacity: 0;
+  animation: accentPulse 3s ease-in-out infinite;
+}
+
+@keyframes accentPulse {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.1;
+    transform: scale(1.05);
+  }
+}
+
+/* Shade card */
+.shade-card {
+  background-color: var(--color-bg);
+  border: 1px solid color-mix(in srgb, var(--color-fg) 20%, transparent);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.shade-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.shade-card-overlay {
+  background-color: transparent;
+  transition: background-color 0.3s ease;
+}
+
+.shade-card:hover .shade-card-overlay {
+  background-color: color-mix(in srgb, var(--color-accent) 10%, transparent);
+}
+
+/* Contact tile hover */
+.contact-tile {
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.contact-tile:hover {
+  transform: translateX(4px);
+}
+
+/* Form input focus */
+input:focus {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-accent) 20%, transparent);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-fg-muted);
+}
+
+/* Selection */
+::selection {
+  background-color: var(--color-accent);
+  color: var(--color-accent-fg);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .grid-checkerboard {
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  .tile-text {
+    font-size: clamp(22px, 4vw, 42px);
+  }
+}
+
+@media (max-width: 768px) {
+  .grid-checkerboard {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+  }
+
+  .tile-text {
+    font-size: clamp(16px, 5vw, 28px);
+  }
+
+  .nav-fixed {
+    padding: 16px 20px;
+  }
+
+  .nav-links {
+    display: none;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .grid-tile-accent::after {
+    display: none;
+  }
+}
